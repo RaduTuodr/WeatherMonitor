@@ -15,18 +15,26 @@ public class User {
     @Column(nullable = false, unique = true)
     private String email;
 
+    @Column(nullable = false)
+    private String password;
+
     private List<Alert> alerts = new ArrayList<>();
 
     @Column(name = "city")
     private List<String> favoriteCities = new ArrayList<>();
 
     public User() {}
-    public User(String email) {
+    public User(String email, String password) {
         this.email = email;
+        this.password = password;
     }
 
     public String getEmail() {
         return email;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     public List<Alert> getAlerts() {

@@ -81,7 +81,7 @@ public class AlertService {
 
             MimeMessage message = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
-            helper.setFrom("tudoreduard2004@gmail.com"); // Use your desired sender email
+            helper.setFrom("tudoreduard2004@gmail.com");
             helper.setTo(alert.getUser());
             helper.setSubject(subject);
             helper.setText(body);

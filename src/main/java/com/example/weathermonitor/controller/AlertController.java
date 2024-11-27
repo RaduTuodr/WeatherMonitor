@@ -28,12 +28,14 @@ public class AlertController {
     public ResponseEntity<Alert> createAlert(@PathVariable String city,
                                              @PathVariable double threshold,
                                              @PathVariable String parameter,
-                                             @PathVariable ThresholdDirection direction,
+                                             @PathVariable String direction,
                                              @PathVariable String message,
                                              @PathVariable String email) {
 
+        ThresholdDirection direction1 = (direction.equals("above")) ? ThresholdDirection.ABOVE : ThresholdDirection.BELOW;
+
         User user = userService.getUser(email);
-        Alert alert = alertService.createAlert(city, threshold, parameter, direction, message, email);
+        Alert alert = alertService.createAlert(city, threshold, parameter, direction1, message, email);
 
         user.addAlert(alert);
         userService.updateUser(user.getEmail(), user);

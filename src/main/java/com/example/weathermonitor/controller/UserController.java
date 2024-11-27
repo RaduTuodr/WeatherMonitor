@@ -1,5 +1,6 @@
 package com.example.weathermonitor.controller;
 
+import com.example.weathermonitor.dto.LoginRequest;
 import com.example.weathermonitor.model.User;
 import com.example.weathermonitor.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +25,8 @@ public class UserController {
     }
 
     @PostMapping("/{email}")
-    public ResponseEntity<User> createUser(@PathVariable String email) {
-        User user = userService.createUser(email);
+    public ResponseEntity<User> createUser(@PathVariable String email, @RequestBody LoginRequest password) {
+        User user = userService.createUser(email, password.getPassword());
         return ResponseEntity.ok(user);
     }
 

@@ -16,6 +16,10 @@ public class UserRepository {
     }
 
     public void addUser(User user) {
+        User checkUser = getUser(user.getEmail());
+        if (checkUser != null) {
+            throw new IllegalArgumentException("User already exists");
+        }
         users.add(user);
     }
 
