@@ -25,7 +25,6 @@ public class WeatherController {
     public ResponseEntity<Weather> getWeather(@PathVariable("city") String city,
                                              @PathVariable("units") String units,
                                              @PathVariable("language") String language) {
-
         Weather weather = weatherService.getWeather(city, units, language);
 
         return ResponseEntity.ok(weather);

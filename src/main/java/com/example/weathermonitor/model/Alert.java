@@ -26,10 +26,6 @@ public class Alert {
     @Column(nullable = false, length = 50)
     private String parameter;
 
-    @NotBlank(message = "Message cannot be blank")
-    @Column(nullable = false, length = 255)
-    private String message;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_email", nullable = false)
     private String userEmail;
@@ -37,12 +33,11 @@ public class Alert {
     public Alert() {
     }
 
-    public Alert(String city, double threshold, String parameter, ThresholdDirection direction, String message, String userEmail) {
+    public Alert(String city, double threshold, String parameter, ThresholdDirection direction, String userEmail) {
         this.city = city;
         this.threshold = threshold;
         this.parameter = parameter;
         this.direction = direction;
-        this.message = message;
         this.userEmail = userEmail;
     }
 
@@ -68,10 +63,6 @@ public class Alert {
 
     public double getThreshold() {
         return threshold;
-    }
-
-    public String getMessage() {
-        return message;
     }
 
     public String getUser() {

@@ -4,6 +4,7 @@ import com.example.weathermonitor.dto.LoginRequest;
 import com.example.weathermonitor.model.User;
 import com.example.weathermonitor.security.JwtUtil;
 import com.example.weathermonitor.service.UserService;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 
@@ -30,11 +31,11 @@ public class AuthController {
     public ResponseEntity<String> signup(@PathVariable String email, @RequestBody LoginRequest loginRequest) {
         try {
             String password = loginRequest.getPassword();
-            User user = userService.createUser(email, password);
+            userService.createUser(email, password);
 
             String token = jwtUtil.generateToken(email);
 
-            return ResponseEntity.ok(token);
+            return ResponseEntity.status(200).body("\"" + token + "\"");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(402).body("User with this email already exists");
         } catch (Exception e) {
@@ -54,7 +55,7 @@ public class AuthController {
 
             String token = jwtUtil.generateToken(email);
 
-            return ResponseEntity.ok(token);
+            return ResponseEntity.status(200).body("\"" + token + "\"");
         } catch (AuthenticationException ex) {
             return ResponseEntity.status(401).body("Invalid email or password");
         }

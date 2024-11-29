@@ -32,8 +32,8 @@ public class AlertService {
         this.javaMailSender = javaMailSender;
     }
 
-    public Alert createAlert(String city, double threshold, String parameter, ThresholdDirection direction, String message, String userEmail) {
-        Alert alert = new Alert(city, threshold, parameter, direction, message, userEmail);
+    public Alert createAlert(String city, double threshold, String parameter, ThresholdDirection direction, String userEmail) {
+        Alert alert = new Alert(city, threshold, parameter, direction, userEmail);
         alertRepository.addAlert(alert);
         return alert;
     }
@@ -76,8 +76,7 @@ public class AlertService {
                     "The weather in " + alert.getCity() + " has triggered an alert!\n" +
                     "Parameter: " + alert.getParameter() + "\n" +
                     "Current Value: " + alert.getThreshold() + "\n" +
-                    "Alert: " + (alert.getDirection().equals(ThresholdDirection.ABOVE) ? "Above" : "Below") + " threshold.\n\n" +
-                    alert.getMessage();
+                    "Alert: " + (alert.getDirection().equals(ThresholdDirection.ABOVE) ? "Above" : "Below") + " threshold.\n\n";
 
             MimeMessage message = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
