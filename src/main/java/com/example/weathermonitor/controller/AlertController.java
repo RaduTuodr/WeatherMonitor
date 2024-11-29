@@ -1,5 +1,6 @@
 package com.example.weathermonitor.controller;
 
+import com.example.weathermonitor.dto.TokenResponse;
 import com.example.weathermonitor.model.Alert;
 import com.example.weathermonitor.model.ThresholdDirection;
 import com.example.weathermonitor.model.User;
@@ -33,10 +34,10 @@ public class AlertController {
                                              @PathVariable String parameter,
                                              @PathVariable String direction,
                                              @PathVariable String email,
-                                             @RequestBody String token) {
+                                             @RequestBody TokenResponse tokenResponse) {
         try {
             User user = userService.getUser(email);
-            if (!jwtUtil.validateToken(token, email))
+            if (!jwtUtil.validateToken(tokenResponse.getToken(), email))
                 return ResponseEntity.status(401).body(null);
 
             ThresholdDirection direction1 = (direction.equals("above")) ? ThresholdDirection.ABOVE : ThresholdDirection.BELOW;
