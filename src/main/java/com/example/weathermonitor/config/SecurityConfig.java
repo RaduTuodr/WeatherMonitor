@@ -32,10 +32,12 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/**").permitAll()
+                        .requestMatchers("/**", "/api/**", "/h2-console/**").permitAll()
                         .anyRequest().authenticated() // Protect all other endpoints
                 )
-                .httpBasic(); // Enable Basic Authentication for simplicity
+                .httpBasic();
+
+        http.headers().frameOptions().disable();
 
         return http.build();
     }

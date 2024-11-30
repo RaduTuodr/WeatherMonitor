@@ -30,9 +30,9 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
-    @PostMapping("/{email}/{favCity}")
+    /*@PostMapping("/{email}/{favCity}")
     public ResponseEntity<User> addFavCityToUser(@PathVariable String email, @PathVariable String favCity) {
         User user = userService.addFavouriteCityToUser(email, favCity);
         return ResponseEntity.ok(user);
-    }
+    }*/
 }

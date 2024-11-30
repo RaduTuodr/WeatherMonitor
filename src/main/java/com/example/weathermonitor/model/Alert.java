@@ -1,8 +1,7 @@
 package com.example.weathermonitor.model;
 
+import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
-
-import javax.persistence.*;
 
 @Entity
 @Table(name = "alerts")
@@ -26,27 +25,23 @@ public class Alert {
     @Column(nullable = false, length = 50)
     private String parameter;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_email", nullable = false)
-    private String userEmail;
+    private User user;
 
-    public Alert() {
-    }
+    public Alert() {}
 
-    public Alert(String city, double threshold, String parameter, ThresholdDirection direction, String userEmail) {
+    public Alert(String city, double threshold, String parameter, ThresholdDirection direction, User user) {
         this.city = city;
         this.threshold = threshold;
         this.parameter = parameter;
         this.direction = direction;
-        this.userEmail = userEmail;
+        this.user = user;
     }
 
+    // Getters and setters
     public Long getId() {
-        return this.id;
-    }
-
-    public void setUser(User user) {
-        this.userEmail = userEmail;
+        return id;
     }
 
     public String getCity() {
@@ -65,7 +60,11 @@ public class Alert {
         return threshold;
     }
 
-    public String getUser() {
-        return userEmail;
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

@@ -7,6 +7,8 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class UserService {
 
@@ -20,24 +22,23 @@ public class UserService {
     }
 
     public User createUser(String email, String password) {
+        if (userRepository.existsById(email)) {
+            throw new IllegalArgumentException("User with email already exists");
+        }
         String hashedPassword = passwordEncoder.encode(password);
         User user = new User(email, hashedPassword);
-        userRepository.addUser(user);
-        return user;
+        return userRepository.save(user);
     }
 
     public User getUser(String email) {
-        return userRepository.getUser(email);
+        return userRepository.findById(email)
+                .orElseThrow(() -> new IllegalArgumentException("User not found with email: " + email));
     }
 
     public void updateUser(String email, User user) {
-        userRepository.updateUser(email, user);
-    }
-
-    public User addFavouriteCityToUser(String email, String city) {
-        User user = this.getUser(email);
-        user.addFavoriteCity(city);
-        userRepository.updateUser(user.getEmail(), user);
-        return user;
+        if (!userRepository.existsById(email)) {
+            throw new IllegalArgumentException("User not found with email: " + email);
+        }
+        userRepository.save(user);
     }
 }

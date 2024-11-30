@@ -1,8 +1,10 @@
 package com.example.weathermonitor.model;
 
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,20 +17,22 @@ public class User {
     @Column(nullable = false, unique = true)
     private String email;
 
+    @NotBlank(message = "Password is required")
     @Column(nullable = false)
     private String password;
 
+    // Change this to @OneToMany that refers to the 'Alert' entity
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Alert> alerts = new ArrayList<>();
 
-    @Column(name = "city")
-    private List<String> favoriteCities = new ArrayList<>();
-
     public User() {}
+
     public User(String email, String password) {
         this.email = email;
         this.password = password;
     }
 
+    // Getters and setters
     public String getEmail() {
         return email;
     }
@@ -45,31 +49,13 @@ public class User {
         this.alerts = alerts;
     }
 
-    public List<String> getFavoriteCities() {
-        return favoriteCities;
-    }
-
-    public void setFavoriteCities(List<String> favoriteCities) {
-        this.favoriteCities = favoriteCities;
-    }
-
-    public void addFavoriteCity(String city) {
-        if (!favoriteCities.contains(city)) {
-            favoriteCities.add(city);
-        }
-    }
-
-    public void removeFavoriteCity(String city) {
-        favoriteCities.remove(city);
-    }
-
     public void addAlert(Alert alert) {
-        alert.setUser(this);
+        alert.setUser(this);  // Set the user on the alert
         alerts.add(alert);
     }
 
     public void removeAlert(Alert alert) {
         alerts.remove(alert);
-        alert.setUser(null);
+        alert.setUser(null);  // Remove the reference to the user from the alert
     }
 }

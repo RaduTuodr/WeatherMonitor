@@ -24,27 +24,30 @@ public class AlertService {
     private final AlertRepository alertRepository;
     private final WeatherService weatherService;
     private final JavaMailSender javaMailSender;
+    private final UserService userService;
 
     @Autowired
-    public AlertService(AlertRepository alertRepository, WeatherService weatherService, JavaMailSender javaMailSender) {
+    public AlertService(AlertRepository alertRepository, WeatherService weatherService, JavaMailSender javaMailSender, UserService userService) {
         this.alertRepository = alertRepository;
         this.weatherService = weatherService;
         this.javaMailSender = javaMailSender;
+        this.userService = userService;
     }
 
-    public Alert createAlert(String city, double threshold, String parameter, ThresholdDirection direction, String userEmail) {
-        Alert alert = new Alert(city, threshold, parameter, direction, userEmail);
-        alertRepository.addAlert(alert);
+    public Alert createAlert(String city, double threshold, String parameter, ThresholdDirection direction, String email) {
+        User user = userService.getUser(email);
+        Alert alert = new Alert(city, threshold, parameter, direction, user);
+        alertRepository.save(alert);
         return alert;
     }
 
     public List<Alert> getAlertsByUser(String email) {
-        return alertRepository.getAlertsByUser(email);
+        return alertRepository.findByUserEmail(email);
     }
 
     @Scheduled(fixedRate = 60000) // Check weather every minute
     public void checkAlert() {
-        List<Alert> alerts = alertRepository.getAlerts();
+        List<Alert> alerts = alertRepository.findAll();
         for (Alert alert : alerts) {
             Weather weather = weatherService.getWeather(alert.getCity(), "metric", "en");
 
@@ -72,7 +75,7 @@ public class AlertService {
     private void sendEmailAlert(Alert alert) {
         try {
             String subject = "Weather Alert: " + alert.getCity();
-            String body = "Hello " + alert.getUser() + ",\n\n" +
+            String body = "Hello " + alert.getUser().getEmail() + ",\n\n" +
                     "The weather in " + alert.getCity() + " has triggered an alert!\n" +
                     "Parameter: " + alert.getParameter() + "\n" +
                     "Current Value: " + alert.getThreshold() + "\n" +
@@ -81,7 +84,7 @@ public class AlertService {
             MimeMessage message = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
             helper.setFrom("tudoreduard2004@gmail.com");
-            helper.setTo(alert.getUser());
+            helper.setTo(alert.getUser().getEmail());
             helper.setSubject(subject);
             helper.setText(body);
 
