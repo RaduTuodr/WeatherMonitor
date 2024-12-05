@@ -1,12 +1,11 @@
-FROM maven:3.8.6-jdk-11-slim as build
-WORKDIR /app
-COPY pom.xml .
-RUN mvn dependency:go-offline
-COPY src /app/src
-RUN mvn clean install -DskipTests
+FROM ubuntu:latest AS build
+RUN apt-get update
+RUN apt-get install openjdk-17-jdk -y
+COPY . .
+RUN mvn clean install
 
-FROM openjdk:11-slim
-WORKDIR /app
-COPY --from=build /app/target/WeatherMonitor-0.0.1-SNAPSHOT.jar /app/your-app.jar
+FROM openjdk:17-jdk-slim
 EXPOSE 8080
-CMD ["java", "-jar", "your-app.jar"]
+COPY --from-build /app/target/WeatherMonitor-0.0.1-SNAPSHOT.jar app.jar
+
+ENTRYPOINT ["java", "-jar", "app.jar"]
